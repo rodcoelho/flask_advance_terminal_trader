@@ -4,7 +4,11 @@ import os
 from flask import Flask, request, render_template, redirect, url_for
 from forms import SignupForm, SignIn
 from flask_sqlalchemy import SQLAlchemy
+from schema import Customer, db
 
+#
+
+# TODO refactor with Blueprints
 app = Flask(__name__)
 with open('/Users/rodrigocoelho/.ssh/fake_secret_key.txt') as f:
     app.secret_key = f.readline()
@@ -20,6 +24,7 @@ def index():
         return render_template('index.html', form=form, title=title, h1=h1)
     elif request.method == "POST":
         if form.validate_on_submit():
+            #FIXME CONTINUE HERE - connect to db
             if 'user exists in db':
                 return "Email exists ---------"
             else:
@@ -27,14 +32,6 @@ def index():
                 return redirect(url_for(signup))
         else:
             return "Form did not validate"
-
-
-@app.route('/dashboard', methods=['GET'])
-def dashboard():
-    title = 'Terminal Trader - Dashboard'
-    h1 = "Dashboard"
-    return render_template('index.html', title=title, h1=h1)
-
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -52,6 +49,13 @@ def signup():
                 return "User has been added to DB"
         else:
             return "Form didn't validate"
+
+
+@app.route('/dashboard', methods=['GET'])
+def dashboard():
+    title = 'Terminal Trader - Dashboard'
+    h1 = "Dashboard"
+    return render_template('index.html', title=title, h1=h1)
 
 
 if __name__ == '__main__':
